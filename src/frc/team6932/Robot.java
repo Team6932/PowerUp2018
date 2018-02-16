@@ -8,23 +8,29 @@
 package frc.team6932;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.properties file in the
- * project.
- */
-// If you rename or move this class, update the build.properties file in the project root
 public class Robot extends IterativeRobot {
 
+    // Other variables
     private static final String DEFAULT_AUTO = "Default";
     private static final String CUSTOM_AUTO = "My Auto";
     private String autoSelected;
     private SendableChooser<String> chooser = new SendableChooser<>();
+
+    // Motor controllers
+    private Spark leftDrive = new Spark(0);
+    private Spark rightDrive = new Spark(1);
+    private Spark cimCubeMotors = new Spark(2);
+    private Spark redlineCubeMotors = new Spark(3);
+    private DifferentialDrive drive = new DifferentialDrive(leftDrive, rightDrive);
+
+    // Joystick
+    private Joystick joystick = new Joystick(0);
 
     /**
      * This function is run when the robot is first started up and should be
