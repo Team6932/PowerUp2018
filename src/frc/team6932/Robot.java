@@ -8,34 +8,16 @@
 package frc.team6932;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
 
-    // GUI variables
-    private String autoColor;
-    private SendableChooser<String> colorChooser = new SendableChooser<>();
+    // Get the Instance Storage Object
+    private InstanceStorage vars = InstanceStorage.getInstance();
+
+    // Other
     private final String RED = "Red";
     private final String BLUE = "Blue";
-
-    // Motor controllers
-    private Spark leftDrive = new Spark(0);
-    private Spark rightDrive = new Spark(1);
-    private Spark rightCimCubeMotors = new Spark(8);
-    private Spark leftCimCubeMotors = new Spark(9);
-    private Spark redlineCubeMotors = new Spark(3);
-    private DifferentialDrive drive = new DifferentialDrive(leftDrive, rightDrive);
-
-    // Joystick
-    private Joystick joystick = new Joystick(0);
-    private Joystick controller = new Joystick(1);
-    private double sideAxis = joystick.getRawAxis(0);
-    private double forwardAxis = joystick.getRawAxis(1);
-
-    // Sensor variables
-    PowerDistributionPanel pdp = new PowerDistributionPanel();
 
     /**
      * This function is run when the robot is first started up and should be
@@ -43,10 +25,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        colorChooser.addDefault("Red", RED);
-        colorChooser.addObject("Blue", BLUE);
-        SmartDashboard.putData("Auto Colors", colorChooser);
-
+        vars.colorChooser.addDefault("Red", RED);
+        vars.colorChooser.addObject("Blue", BLUE);
         // Init camera
         CameraServer.getInstance().startAutomaticCapture();
     }
@@ -70,18 +50,19 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        autoColor = colorChooser.getSelected();
+        vars.autoColor = vars.colorChooser.getSelected();
         // autoSelected = SmartDashboard.getString("Auto Selector",
         // defaultAuto);
-        System.out.println("Color selected: " + colorChooser);
+        System.out.println("Color selected: " + vars.colorChooser);
     }
 
     /**
      * This function is called periodically during autonomous.
      */
+
     @Override
     public void autonomousPeriodic() {
-        switch (autoColor) {
+        switch (vars.autoColor) {
             case RED:
                 // Put custom auto code here
                 break;
@@ -98,8 +79,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        rightCimCubeMotors.set(forwardAxis);
-        leftCimCubeMotors.set(forwardAxis);
+        vars.rightCimCubeMotors.set(vars.forwardAxis);
+        vars.leftCimCubeMotors.set(vars.forwardAxis);
     }
 
     /**
