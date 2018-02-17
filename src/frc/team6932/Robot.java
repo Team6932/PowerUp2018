@@ -7,30 +7,35 @@
 
 package frc.team6932;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Robot extends IterativeRobot {
+public class Robot extends TimedRobot {
 
-    // Other variables
-    private static final String DEFAULT_AUTO = "Default";
-    private static final String CUSTOM_AUTO = "My Auto";
-    private String autoSelected;
-    private SendableChooser<String> chooser = new SendableChooser<>();
+    // GUI variables
+    private String autoColor;
+    private SendableChooser<String> colorChooser = new SendableChooser<>();
+    private final String RED = "Red";
+    private final String BLUE = "Blue";
 
     // Motor controllers
     private Spark leftDrive = new Spark(0);
     private Spark rightDrive = new Spark(1);
-    private Spark cimCubeMotors = new Spark(2);
+    private Spark rightCimCubeMotors = new Spark(8);
+    private Spark leftCimCubeMotors = new Spark(9);
     private Spark redlineCubeMotors = new Spark(3);
     private DifferentialDrive drive = new DifferentialDrive(leftDrive, rightDrive);
 
     // Joystick
     private Joystick joystick = new Joystick(0);
+    private Joystick controller = new Joystick(1);
+    private double sideAxis = joystick.getRawAxis(0);
+    private double forwardAxis = joystick.getRawAxis(1);
+
+    // Sensor variables
+    PowerDistributionPanel pdp = new PowerDistributionPanel();
 
     /**
      * This function is run when the robot is first started up and should be
@@ -38,14 +43,23 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void robotInit() {
-        chooser.addDefault("Default Auto", DEFAULT_AUTO);
-        chooser.addObject("My Auto", CUSTOM_AUTO);
-        SmartDashboard.putData("Auto choices", chooser);
+        colorChooser.addDefault("Red", RED);
+        colorChooser.addObject("Blue", BLUE);
+        SmartDashboard.putData("Auto Colors", colorChooser);
+
+        // Init camera
+        CameraServer.getInstance().startAutomaticCapture();
+    }
+
+    @Override
+    public void robotPeriodic() {
+        // Smart Dashboard
+        SmartDashboard.putBoolean("Cube in Robot: ", true);
     }
 
     /**
      * This autonomous (along with the chooser code above) shows how to select
-     * between different autonomous modes using the dashboard. The sendable
+     * between different autonomous modes using the dashboard. The sendableCameraServer.getInstance().startAutomaticCapture();
      * chooser code works with the Java SmartDashboard. If you prefer the
      * LabVIEW Dashboard, remove all of the chooser code and uncomment the
      * getString line to get the auto name from the text box below the Gyro
@@ -56,10 +70,10 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousInit() {
-        autoSelected = chooser.getSelected();
+        autoColor = colorChooser.getSelected();
         // autoSelected = SmartDashboard.getString("Auto Selector",
         // defaultAuto);
-        System.out.println("Auto selected: " + autoSelected);
+        System.out.println("Color selected: " + colorChooser);
     }
 
     /**
@@ -67,11 +81,12 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        switch (autoSelected) {
-            case CUSTOM_AUTO:
+        switch (autoColor) {
+            case RED:
                 // Put custom auto code here
                 break;
-            case DEFAULT_AUTO:
+            case BLUE:
+                break;
             default:
                 // Put default auto code here
                 break;
@@ -83,7 +98,8 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void teleopPeriodic() {
-
+        rightCimCubeMotors.set(forwardAxis);
+        leftCimCubeMotors.set(forwardAxis);
     }
 
     /**
