@@ -14,6 +14,7 @@ public class Robot extends TimedRobot {
 
     // Get the Instance Storage Object
     private InstanceStorage vars = InstanceStorage.getInstance();
+    private CustomFunctions func = CustomFunctions.getInstance();
 
     // Other
     private final String RED = "Red";
@@ -79,20 +80,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        vars.leftCimCubeMotor.set(0.53); // Oddball motor
-        vars.rightCimCubeMotor.set(0.5);
-        vars.rightRedlineCubeMotor.set(0.43); // Oddball gearbox?
-        vars.leftRedlineCubeMotor.set(0.4);
-        vars.rightCimGrabberMotor.set(0.4);
-        vars.leftCimGrabberMotor.set(0.4);
-        vars.drive.arcadeDrive(vars.forwardAxis, vars.sideAxis);
-    }
 
-    public void pickup() {
-        vars.leftCimCubeMotor.set(0.53); // Oddball motor
-        vars.rightCimCubeMotor.set(0.5);
-        vars.rightCimGrabberMotor.set(0.4);
-        vars.leftCimGrabberMotor.set(0.4);
+        vars.drive.arcadeDrive(vars.forwardAxis, vars.sideAxis);
     }
 
     /**
