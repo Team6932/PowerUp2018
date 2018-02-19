@@ -7,77 +7,38 @@
 
 package frc.team6932;
 
-import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Robot extends TimedRobot {
 
     // Get the Instance Storage Object
     private InstanceStorage vars = InstanceStorage.getInstance();
     private CustomFunctions func = CustomFunctions.getInstance();
+    private DashController dash = DashController.getInstance();
 
-    // Other
-    private final String RED = "Red";
-    private final String BLUE = "Blue";
-
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
     @Override
     public void robotInit() {
-        vars.colorChooser.addDefault("Red", RED);
-        vars.colorChooser.addObject("Blue", BLUE);
-        // Init camera
+        // Start automatic camera capture
         CameraServer.getInstance().startAutomaticCapture();
     }
 
     @Override
     public void robotPeriodic() {
-        // Smart Dashboard
-        SmartDashboard.putBoolean("Cube in Robot", true);
+        // Update smart dashboard
+        dash.update();
     }
 
-    /**
-     * This autonomous (along with the chooser code above) shows how to select
-     * between different autonomous modes using the dashboard. The sendableCameraServer.getInstance().startAutomaticCapture();
-     * chooser code works with the Java SmartDashboard. If you prefer the
-     * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-     * getString line to get the auto name from the text box below the Gyro
-     * <p>
-     * <p>You can add additional auto modes by adding additional comparisons to
-     * the switch structure below with additional strings. If using the
-     * SendableChooser make sure to add them to the chooser code above as well.
-     */
     @Override
     public void autonomousInit() {
-        vars.autoColor = vars.colorChooser.getSelected();
-        // autoSelected = SmartDashboard.getString("Auto Selector",
-        // defaultAuto);
-        System.out.println("Color selected: " + vars.colorChooser);
-    }
 
-    /**
-     * This function is called periodically during autonomous.
-     */
+    }
 
     @Override
     public void autonomousPeriodic() {
-        switch (vars.autoColor) {
-            case RED:
-                // Put custom auto code here
-                break;
-            case BLUE:
-                break;
-            default:
-                // Put default auto code here
-                break;
-        }
+        // TODO: Autonomous code; get done during 6hr testing period
     }
 
-    /**
-     * This function is called periodically during operator control.
-     */
     @Override
     public void teleopPeriodic() {
         // Create axis deadzone and wait for axis release when cube in robot to prevent accidental shooting

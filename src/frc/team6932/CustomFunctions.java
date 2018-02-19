@@ -4,6 +4,10 @@ public class CustomFunctions {
     private static CustomFunctions instance = new CustomFunctions();
     private static InstanceStorage vars = InstanceStorage.getInstance();
 
+    public static CustomFunctions getInstance() {
+        return instance;
+    }
+
     public void setWithCorrections(double leftCimGrabber, double rightCimGrabber, double leftCimCube, double rightCimCube, double leftRedlineCube, double rightRedlineCube) {
         vars.leftCimGrabberMotor.set(0.4 * leftCimGrabber);
         vars.rightCimGrabberMotor.set(0.4 * rightCimGrabber);
@@ -15,9 +19,5 @@ public class CustomFunctions {
 
     public boolean cubeInRobot() {
         return vars.cubeDetector.getRangeInches() < vars.cubeThreshhold;
-    }
-
-    public static CustomFunctions getInstance() {
-        return instance;
     }
 }
