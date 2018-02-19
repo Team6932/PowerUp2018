@@ -10,6 +10,8 @@ package frc.team6932;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 
+import static java.lang.Math.abs;
+
 public class Robot extends TimedRobot {
 
     // Get storage objects
@@ -21,6 +23,9 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Start automatic camera capture
         CameraServer.getInstance().startAutomaticCapture();
+
+        // Reset gyro
+        vars.gyro.calibrate();
     }
 
     @Override
@@ -42,19 +47,20 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         // Create axis deadzone and wait for axis release when cube in robot to prevent accidental shooting
-        if (vars.cubeAxis > vars.axisDeadzone) {
+        double cubeAxisValue = vars.cubeControl.getRawAxis(vars.cubeAxis);
+        /*if (abs(cubeAxisValue) > vars.axisDeadzone) {
             if (!vars.waitingForCubeAxisRelease) {
                 // Not waiting for axis release
                 if (!func.cubeInRobot()) {
                     // Cube is not in robot, attempt grabbing
-                    func.setWithCorrections(vars.cubeAxis, vars.cubeAxis, vars.cubeAxis, vars.cubeAxis, 0, 0);
+                    func.setWithCorrections(cubeAxisValue, cubeAxisValue, cubeAxisValue, cubeAxisValue, 0, 0);
                     if (func.cubeInRobot()) {
                         // Cube is now in robot, wait for release
                         vars.waitingForCubeAxisRelease = true;
                     }
                 } else if (func.cubeInRobot() && !vars.waitingForCubeAxisRelease) {
                     // Cube is in robot and axis has been released, attempt shooting
-                    func.setWithCorrections(0, 0, vars.cubeAxis, vars.cubeAxis, vars.cubeAxis, vars.cubeAxis);
+                    func.setWithCorrections(0, 0, cubeAxisValue, cubeAxisValue, cubeAxisValue, cubeAxisValue);
                 }
             } else {
                 // Waiting for axis release, do not shoot cube
@@ -65,10 +71,11 @@ public class Robot extends TimedRobot {
                 // Axis has been released
                 vars.waitingForCubeAxisRelease = false;
             }
-        }
+        }*/
+        func.setWithCorrections(cubeAxisValue, cubeAxisValue, cubeAxisValue, cubeAxisValue, cubeAxisValue, cubeAxisValue);
 
         // Drive robot
-        vars.drive.arcadeDrive(vars.verticalAxis, vars.horizontalAxis);
+        vars.drive.arcadeDrive(vars.driveControl.getRawAxis(vars.verticalDriveAxis) * -1, vars.driveControl.getRawAxis(vars.horizontalDriveAxis));
     }
 
     @Override
