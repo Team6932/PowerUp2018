@@ -80,8 +80,34 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        // Create axis deadzone and wait for axis release when cube in robot to prevent accidental shooting
+        if (vars.cubeAxis > vars.axisDeadzone) {
+            if (!vars.waitingForCubeAxisRelease) {
+                // Not waiting for axis release
+                if (!func.cubeInRobot()) {
+                    // Cube is not in robot, attempt grabbing
+                    func.setWithCorrections(vars.cubeAxis, vars.cubeAxis, vars.cubeAxis, vars.cubeAxis, 0, 0);
+                    if (func.cubeInRobot()) {
+                        // Cube is now in robot, wait for release
+                        vars.waitingForCubeAxisRelease = true;
+                    }
+                } else if (func.cubeInRobot() && !vars.waitingForCubeAxisRelease) {
+                    // Cube is in robot and axis has been released, attempt shooting
+                    func.setWithCorrections(0, 0, vars.cubeAxis, vars.cubeAxis, vars.cubeAxis, vars.cubeAxis);
+                }
+            } else {
+                // Waiting for axis release, do not shoot cube
+                func.setWithCorrections(0, 0, 0, 0, 0, 0);
+            }
+        } else {
+            if (vars.waitingForCubeAxisRelease) {
+                // Axis has been released
+                vars.waitingForCubeAxisRelease = false;
+            }
+        }
 
-        vars.drive.arcadeDrive(vars.forwardAxis, vars.sideAxis);
+        // Drive robot
+        vars.drive.arcadeDrive(vars.verticalAxis, vars.horizontalAxis);
     }
 
     /**

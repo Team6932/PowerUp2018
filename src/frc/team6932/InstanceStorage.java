@@ -1,9 +1,6 @@
 package frc.team6932;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PWMTalonSRX;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
@@ -29,11 +26,22 @@ public class InstanceStorage {
     // Joystick
     public Joystick joystick = new Joystick(0);
     public Joystick controller = new Joystick(1);
-    public double sideAxis = joystick.getRawAxis(0);
-    public double forwardAxis = joystick.getRawAxis(1);
+    public double horizontalAxis = joystick.getRawAxis(0);
+    public double verticalAxis = joystick.getRawAxis(1);
+
+    // Controller
+    public double cubeAxis = controller.getRawAxis(1);
 
     // Sensor variables
+    Ultrasonic cubeDetector = new Ultrasonic(0, 1);
     PowerDistributionPanel pdp = new PowerDistributionPanel(0);
+
+    // Configuration
+    public double axisDeadzone = 0.1; // Axis deadzone for controllers/joysticks
+    public double cubeThreshhold = 12; // Threshold in inches for cube detection
+
+    // Variable storage, should not be adjusted.
+    public boolean waitingForCubeAxisRelease = false;
 
     public static InstanceStorage getInstance() {
         return instance;

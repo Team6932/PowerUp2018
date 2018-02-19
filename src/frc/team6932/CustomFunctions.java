@@ -13,6 +13,10 @@ public class CustomFunctions {
         vars.rightRedlineCubeMotor.set((0.4 * rightRedlineCube) + 0.03); // Oddball motor/gearbox
     }
 
+    public boolean cubeInRobot() {
+        return vars.cubeDetector.getRangeInches() < vars.cubeThreshhold;
+    }
+
     public static CustomFunctions getInstance() {
         return instance;
     }
