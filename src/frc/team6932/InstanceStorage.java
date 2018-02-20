@@ -29,7 +29,7 @@ public class InstanceStorage {
 
     // Configuration
     public double axisDeadzone = 0.1; // Axis deadzone for controllers/joysticks
-    public double cubeThreshhold = 12; // Threshold in inches for cube detection
+    public double cubeThreshold = 12; // Threshold in inches for cube detection
     public Joystick cubeControl = controller; // Joystick to use for controlling cube motors
     public Joystick driveControl = joystick; // Joystick to use for controlling drive motors
     public int cubeAxis = 1;
@@ -37,7 +37,7 @@ public class InstanceStorage {
     public int verticalDriveAxis = 1;
     public int ratioAxis = 3;
 
-    // Global variable storage; should not be adjusted
+    // Global variable storage
     public boolean waitingForCubeAxisRelease = false;
 
     public static InstanceStorage getInstance() {
