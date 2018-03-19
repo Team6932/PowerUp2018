@@ -9,6 +9,7 @@ package frc.team6932;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 
 import static java.lang.Math.abs;
 
@@ -17,31 +18,34 @@ public class Robot extends TimedRobot {
     // Get storage objects
     private InstanceStorage vars = InstanceStorage.getInstance();
     private CustomFunctions func = CustomFunctions.getInstance();
-    private DashController dash = DashController.getInstance();
+    //private DashController dash = DashController.getInstance();
 
     @Override
     public void robotInit() {
         // Start automatic camera capture
         CameraServer.getInstance().startAutomaticCapture();
 
-        // Reset gyro
+        // Calibrate gyro
         vars.gyro.calibrate();
     }
 
     @Override
     public void robotPeriodic() {
         // Update smart dashboard
-        dash.update();
+        //dash.update();
+        double angle = vars.gyro.getAngle(); // get current heading
+        System.out.println(angle);
     }
 
     @Override
     public void autonomousInit() {
-
+        func.driveStraight(2);
+        //func.turn(180);
     }
 
     @Override
     public void autonomousPeriodic() {
-        // TODO: Autonomous code; get done during 6hr testing period
+
     }
 
     @Override

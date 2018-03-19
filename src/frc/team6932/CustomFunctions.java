@@ -8,6 +8,8 @@ public class CustomFunctions {
         return instance;
     }
 
+    // Non-blocking functions
+
     public void setWithCorrections(double leftCimGrabber, double rightCimGrabber, double leftCimCube, double rightCimCube, double leftRedlineCube, double rightRedlineCube) {
         vars.leftCimGrabberMotor.set(0.55 * leftCimGrabber);
         vars.rightCimGrabberMotor.set(0.55 * rightCimGrabber);
@@ -24,5 +26,36 @@ public class CustomFunctions {
 
     public double ratioValue(double val) {
         return val * (((vars.driveControl.getRawAxis(vars.ratioAxis) * -1) + 1) / 2);
+    }
+
+    // Blocking functions
+
+    private double metersPerSecond = 1;
+    private double degreesPerSecond = 90;
+
+    public void driveStraight(double distanceMeters) {
+        vars.gyro.reset();
+        double currentTime = System.currentTimeMillis();
+        double end = currentTime + ((distanceMeters / metersPerSecond) * 1000);
+
+        while(System.currentTimeMillis() < end) {
+            double angle = vars.gyro.getAngle(); // get current heading
+            vars.drive.arcadeDrive(0.7, -angle * vars.Kp); // drive towards heading 0
+        }
+        vars.drive.arcadeDrive(0, 0);
+    }
+
+    public void turn(double degrees) {
+        double currentTime = System.currentTimeMillis();
+        double end = currentTime + ((degrees / degreesPerSecond) * 1000);
+        while(System.currentTimeMillis() < end) {
+            double rotation;
+            if(degrees < 0) {
+                rotation = -90;
+            } else {
+                rotation = 90;
+            }
+            vars.drive.arcadeDrive(0.7, rotation);
+        }
     }
 }

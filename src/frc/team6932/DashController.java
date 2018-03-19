@@ -14,6 +14,5 @@ public class DashController {
     public void update() {
         SmartDashboard.putBoolean("Cube in Robot", func.cubeInRobot());
         SmartDashboard.putData(vars.pdp);
-        SmartDashboard.putData(vars.gyro);
     }
 }

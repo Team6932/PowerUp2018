@@ -2,6 +2,7 @@ package frc.team6932;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class InstanceStorage {
 
@@ -10,7 +11,7 @@ public class InstanceStorage {
     // Sensors
     Ultrasonic cubeDetector = new Ultrasonic(9, 8);
     PowerDistributionPanel pdp = new PowerDistributionPanel(0);
-    AnalogGyro gyro = new AnalogGyro(1);
+    Gyro gyro = new ADXRS450_Gyro();
 
     // Motor controllers
     public Spark leftDrive = new Spark(0);
@@ -36,6 +37,7 @@ public class InstanceStorage {
     public int horizontalDriveAxis = 2;
     public int verticalDriveAxis = 1;
     public int ratioAxis = 3;
+    double Kp = 0.03;
 
     // Global variable storage
     public boolean waitingForCubeAxisRelease = false;
