@@ -10,6 +10,7 @@ public class CustomFunctions {
 
     // Non-blocking functions
 
+    // Send to grabber motors with corrections for derp motors
     public void setWithCorrections(double leftCimGrabber, double rightCimGrabber, double leftCimCube, double rightCimCube, double leftRedlineCube, double rightRedlineCube) {
         vars.leftCimGrabberMotor.set(0.55 * leftCimGrabber);
         vars.rightCimGrabberMotor.set(0.55 * rightCimGrabber);
@@ -19,6 +20,7 @@ public class CustomFunctions {
         vars.rightRedlineCubeMotor.set((0.5 * rightRedlineCube) * 1.1); // Oddball motor/gearbox
     }
 
+    // Check if cube in robot
     public boolean cubeInRobot() {
         vars.cubeDetector.ping();
         return vars.cubeDetector.getRangeInches() < vars.cubeThreshold;
@@ -30,32 +32,61 @@ public class CustomFunctions {
 
     // Blocking functions
 
-    private double metersPerSecond = 1;
-    private double degreesPerSecond = 90;
-
+    // Drive in a straight line and correct for being rammed
     public void driveStraight(double distanceMeters) {
-        vars.gyro.reset();
+        vars.gyro.reset(); // Set gyro heading to 0
         double currentTime = System.currentTimeMillis();
-        double end = currentTime + ((distanceMeters / metersPerSecond) * 1000);
-
+        double end = currentTime + ((distanceMeters / vars.metersPerSecond) * 1000);
+        // Run for amount of seconds it takes to go distance
         while(System.currentTimeMillis() < end) {
-            double angle = vars.gyro.getAngle(); // get current heading
-            vars.drive.arcadeDrive(0.7, -angle * vars.Kp); // drive towards heading 0
+            double angleOffset = vars.gyro.getAngle();
+            // Cap desired angle for efficiency
+            while(angleOffset > 180) {
+                angleOffset -= 360;
+            }
+            while(angleOffset < -180) {
+                angleOffset += 360;
+            }
+            // Cap correction speed
+            double rotationNeeded = angleOffset * vars.driveKp;
+            if(rotationNeeded > vars.turnSpeed) {
+                rotationNeeded = vars.turnSpeed;
+            }
+            if(rotationNeeded < -vars.turnSpeed) {
+                rotationNeeded = -vars.turnSpeed;
+            }
+            vars.drive.arcadeDrive(vars.driveSpeed, rotationNeeded); // Drive straight forward
         }
         vars.drive.arcadeDrive(0, 0);
     }
 
-    public void turn(double degrees) {
-        double currentTime = System.currentTimeMillis();
-        double end = currentTime + ((degrees / degreesPerSecond) * 1000);
-        while(System.currentTimeMillis() < end) {
-            double rotation;
-            if(degrees < 0) {
-                rotation = -90;
-            } else {
-                rotation = 90;
+    // Turn and correct for running over stuff or different floor materials
+    public void turn(double rotationDegrees) {
+        vars.gyro.reset(); //Set gyro heading to 0
+        boolean continueTurning = true;
+        int sensitivity = 0;
+        while(true) {
+            double angleOffset = vars.gyro.getAngle();
+            double rotationNeeded = (angleOffset - rotationDegrees) * vars.turnKp;
+            // Cap rotation speed value
+            if(rotationNeeded > vars.turnSpeed) {
+                rotationNeeded = vars.turnSpeed;
             }
-            vars.drive.arcadeDrive(0.7, rotation);
+            if(rotationNeeded < -vars.turnSpeed) {
+                rotationNeeded = -vars.turnSpeed;
+            }
+            vars.drive.arcadeDrive(0, rotationNeeded); // Turn towards desired heading
+            // Wait to make sure angle is stabilized
+            if(angleOffset > (rotationDegrees - vars.turnTolerance) && angleOffset < (rotationDegrees + vars.turnTolerance)) {
+                sensitivity += 1;
+                if(sensitivity > vars.turnSensitivity) {
+                    break;
+                }
+            } else {
+                sensitivity = 0;
+            }
         }
+        // Set motors to zero
+        vars.drive.arcadeDrive(0, 0);
     }
 }

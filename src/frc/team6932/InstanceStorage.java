@@ -10,7 +10,6 @@ public class InstanceStorage {
 
     // Sensors
     Ultrasonic cubeDetector = new Ultrasonic(9, 8);
-    PowerDistributionPanel pdp = new PowerDistributionPanel(0);
     Gyro gyro = new ADXRS450_Gyro();
 
     // Motor controllers
@@ -28,19 +27,25 @@ public class InstanceStorage {
     public Joystick joystick = new Joystick(0);
     public Joystick controller = new Joystick(1);
 
-    // Configuration
-    public double axisDeadzone = 0.1; // Axis deadzone for controllers/joysticks
+    // Misc. Configuration
     public double cubeThreshold = 12; // Threshold in inches for cube detection
-    public Joystick cubeControl = controller; // Joystick to use for controlling cube motors
-    public Joystick driveControl = joystick; // Joystick to use for controlling drive motors
+
+    // Controller Configuration
+    public Joystick cubeControl = controller;
+    public Joystick driveControl = joystick;
     public int cubeAxis = 1;
     public int horizontalDriveAxis = 2;
     public int verticalDriveAxis = 1;
     public int ratioAxis = 3;
-    double Kp = 0.03;
 
-    // Global variable storage
-    public boolean waitingForCubeAxisRelease = false;
+    // Motor configuration
+    double driveKp = 0.1;
+    double turnKp = 0.07;
+    double metersPerSecond = 1.5;
+    double driveSpeed = 0.75;
+    double turnSpeed = 0.75;
+    double turnTolerance = 3;
+    double turnSensitivity = 100;
 
     public static InstanceStorage getInstance() {
         return instance;
