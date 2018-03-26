@@ -8,7 +8,9 @@
 package frc.team6932;
 
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+//import edu.wpi.first.wpilibj.networktables.*;
 
 public class Robot extends TimedRobot {
 
@@ -25,26 +27,60 @@ public class Robot extends TimedRobot {
         // Reset gyro
         vars.gyro.calibrate();
         vars.gyro.reset();
+
+        // Initialize dashboard
+        dash.init();
     }
 
     @Override
     public void robotPeriodic() {
         // Update smart dashboard
         dash.update();
+        System.out.println(dash.autoCommand.getSelected());
     }
 
     @Override
     public void autonomousInit() {
+
         // One-Time Autonomous Program
-        func.driveStraight(1);
-        func.turn(45);
-        func.turn(-45);
+        vars.selectedPos = dash.autoCommand.getSelected();
+        if (vars.selectedPos.equals(3)) {
+            if (func.getOwnership(0) == vars.RIGHT) {
+                func.driveStraight(1);
+                func.turn(-90);
+                double currentTime = System.currentTimeMillis();
+                double end = currentTime + (vars.throwSeconds * 1000);
+                while (System.currentTimeMillis() < end) {
+                    func.setWithCorrections(1, 1, 1, 1, 1, 1);
+                }
+            } else if (func.getOwnership(0) == vars.LEFT) {
+                //TODO
+            }
+        } else if (vars.selectedPos.equals(2)) {
+            if (func.getOwnership(0) == vars.RIGHT) {
+                func.driveStraight(0.5);
+                func.turn(180 + 35); // Flip backwards
+                func.driveStraight(-2);
+                func.turn(-35);
+                func.driveStraight(-1);
+                double currentTime = System.currentTimeMillis();
+                double end = currentTime + (vars.throwSeconds * 1000);
+                while (System.currentTimeMillis() < end) {
+                    func.setWithCorrections(1, 1, 1, 1, 1, 1);
+                }
+            } else if (func.getOwnership(0) == vars.LEFT) {
+                //TODO
+            }
+        } else if (vars.selectedPos.equals(1)) {
+            //TODO
+        }
     }
 
     @Override
     public void autonomousPeriodic() {
         // Repeatedly set motors to 0
         vars.drive.arcadeDrive(0, 0);
+        func.setWithCorrections(0, 0, 0, 0, 0, 0);
     }
 
     @Override

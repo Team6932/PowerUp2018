@@ -1,5 +1,7 @@
 package frc.team6932;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class CustomFunctions {
     private static CustomFunctions instance = new CustomFunctions();
     private static InstanceStorage vars = InstanceStorage.getInstance();
@@ -20,14 +22,25 @@ public class CustomFunctions {
         vars.rightRedlineCubeMotor.set((0.5 * rightRedlineCube) * 1.1); // Oddball motor/gearbox
     }
 
-    // Check if cube in robot
-    public boolean cubeInRobot() {
-        vars.cubeDetector.ping();
-        return vars.cubeDetector.getRangeInches() < vars.cubeThreshold;
-    }
-
+    // Adjust joystick values for slider
     public double ratioValue(double val) {
         return val * (((vars.driveControl.getRawAxis(vars.ratioAxis) * -1) + 1) / 2);
+    }
+
+    // Get ownership from driver station
+    public int getOwnership(int position) {
+        String gameData = DriverStation.getInstance().getGameSpecificMessage();
+        if(gameData.length() > 0) {
+            if(gameData.charAt(position) == 'R') {
+                return vars.RIGHT;
+            } else if(gameData.charAt(position) == 'L') {
+                return vars.LEFT;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 
     // Blocking functions

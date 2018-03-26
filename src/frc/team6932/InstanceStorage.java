@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 public class InstanceStorage {
 
     private static InstanceStorage instance = new InstanceStorage();
+    private DashController dash = DashController.getInstance();
 
     // Sensors
     Ultrasonic cubeDetector = new Ultrasonic(9, 8);
@@ -46,6 +47,14 @@ public class InstanceStorage {
     double turnSpeed = 0.75;
     double turnTolerance = 3;
     double turnSensitivity = 100;
+    double throwSeconds = 2;
+
+    // Constants
+    public final int RIGHT = -1;
+    public final int LEFT = 1;
+
+    // Global variables
+    public Object selectedPos;
 
     public static InstanceStorage getInstance() {
         return instance;
