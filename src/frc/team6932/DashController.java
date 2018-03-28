@@ -8,7 +8,7 @@ public class DashController {
     private static CustomFunctions func = CustomFunctions.getInstance();
     private static InstanceStorage vars = InstanceStorage.getInstance();
 
-    public SendableChooser autoCommand = new SendableChooser();
+    public SendableChooser<Integer> autoCommand = new SendableChooser();
 
     public static DashController getInstance() {
         return instance;

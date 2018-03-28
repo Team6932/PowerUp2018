@@ -8,9 +8,7 @@
 package frc.team6932;
 
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-//import edu.wpi.first.wpilibj.networktables.*;
 
 public class Robot extends TimedRobot {
 
@@ -28,7 +26,7 @@ public class Robot extends TimedRobot {
         vars.gyro.calibrate();
         vars.gyro.reset();
 
-        // Initialize dashboard
+        // Init dashboard
         dash.init();
     }
 
@@ -36,43 +34,23 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         // Update smart dashboard
         dash.update();
-        System.out.println(dash.autoCommand.getSelected());
     }
 
     @Override
     public void autonomousInit() {
-
         // One-Time Autonomous Program
-        vars.selectedPos = dash.autoCommand.getSelected();
-        if (vars.selectedPos.equals(3)) {
-            if (func.getOwnership(0) == vars.RIGHT) {
-                func.driveStraight(1);
-                func.turn(-90);
-                double currentTime = System.currentTimeMillis();
-                double end = currentTime + (vars.throwSeconds * 1000);
-                while (System.currentTimeMillis() < end) {
-                    func.setWithCorrections(1, 1, 1, 1, 1, 1);
-                }
-            } else if (func.getOwnership(0) == vars.LEFT) {
-                //TODO
+        if(dash.autoCommand.getSelected() == 3) {
+            func.driveStraight(3.5);
+            if(func.getOwnership(0) == vars.RIGHT) {
+                func.turn(90);
+                func.driveStraight(-0.5);
+                func.throwCube(false);
             }
-        } else if (vars.selectedPos.equals(2)) {
-            if (func.getOwnership(0) == vars.RIGHT) {
-                func.driveStraight(0.5);
-                func.turn(180 + 35); // Flip backwards
-                func.driveStraight(-2);
-                func.turn(-35);
-                func.driveStraight(-1);
-                double currentTime = System.currentTimeMillis();
-                double end = currentTime + (vars.throwSeconds * 1000);
-                while (System.currentTimeMillis() < end) {
-                    func.setWithCorrections(1, 1, 1, 1, 1, 1);
-                }
-            } else if (func.getOwnership(0) == vars.LEFT) {
-                //TODO
-            }
-        } else if (vars.selectedPos.equals(1)) {
-            //TODO
+        } else if(dash.autoCommand.getSelected() == 2) {
+            func.turn(90);
+            func.throwCube(false);
+        } else if(dash.autoCommand.getSelected() == 1) {
+            func.driveStraight(3.5);
         }
     }
 
@@ -80,7 +58,6 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         // Repeatedly set motors to 0
         vars.drive.arcadeDrive(0, 0);
-        func.setWithCorrections(0, 0, 0, 0, 0, 0);
     }
 
     @Override
