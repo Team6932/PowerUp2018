@@ -2,6 +2,9 @@ package frc.team6932;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.signum;
+
 public class CustomFunctions {
     private static CustomFunctions instance = new CustomFunctions();
     private static InstanceStorage vars = InstanceStorage.getInstance();
@@ -14,12 +17,12 @@ public class CustomFunctions {
 
     // Send to grabber motors with corrections for derp motors
     public void setWithCorrections(double leftCimGrabber, double rightCimGrabber, double leftCimCube, double rightCimCube, double leftRedlineCube, double rightRedlineCube) {
-        vars.leftCimGrabberMotor.set(0.55 * leftCimGrabber);
-        vars.rightCimGrabberMotor.set(0.55 * rightCimGrabber);
-        vars.leftCimCubeMotor.set(0.55 * leftCimCube);
-        vars.rightCimCubeMotor.set((0.55 * rightCimCube) * 1.3); // Oddball motor
-        vars.leftRedlineCubeMotor.set(0.5 * leftRedlineCube);
-        vars.rightRedlineCubeMotor.set((0.5 * rightRedlineCube) * 1.1); // Oddball motor/gearbox
+        vars.leftCimGrabberMotor.set(0.65 * leftCimGrabber);
+        vars.rightCimGrabberMotor.set(0.65 * rightCimGrabber);
+        vars.leftCimCubeMotor.set(0.65 * leftCimCube);
+        vars.rightCimCubeMotor.set((0.65 * rightCimCube) * 1.3); // Oddball motor
+        vars.leftRedlineCubeMotor.set(0.6 * leftRedlineCube);
+        vars.rightRedlineCubeMotor.set((0.6 * rightRedlineCube) * 1.1); // Oddball motor/gearbox
     }
 
     // Adjust joystick values for slider
@@ -49,7 +52,7 @@ public class CustomFunctions {
     public void driveStraight(double distanceMeters) {
         vars.gyro.reset(); // Set gyro heading to 0
         double currentTime = System.currentTimeMillis();
-        double end = currentTime + ((distanceMeters / vars.metersPerSecond) * 1000);
+        double end = currentTime + ((abs(distanceMeters) / vars.metersPerSecond) * 1000);
         // Run for amount of seconds it takes to go distance
         while(System.currentTimeMillis() < end) {
             setWithCorrections(0, 0, 0, 0, 0, 0);
@@ -69,7 +72,12 @@ public class CustomFunctions {
             if(rotationNeeded < -vars.turnSpeed) {
                 rotationNeeded = -vars.turnSpeed;
             }
-            vars.drive.arcadeDrive(vars.driveSpeed, rotationNeeded); // Drive straight forward
+            vars.drive.arcadeDrive(signum(distanceMeters) * vars.driveSpeed, rotationNeeded); // Drive straight forward
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         vars.drive.arcadeDrive(0, 0);
     }
@@ -81,9 +89,6 @@ public class CustomFunctions {
         while(true) {
             setWithCorrections(0, 0, 0, 0, 0, 0);
             double angleOffset = vars.gyro.getAngle();
-            System.out.println("angleOffset " + angleOffset);
-            System.out.println("angleMinusDegrees " + String.valueOf(angleOffset - rotationDegrees));
-            System.out.println("rotationNeeded " + (angleOffset - rotationDegrees) * vars.turnKp);
             double rotationNeeded = (angleOffset - rotationDegrees) * vars.turnKp;
             // Cap rotation speed value
             if(rotationNeeded > vars.turnSpeed) {
@@ -96,16 +101,16 @@ public class CustomFunctions {
             // Wait to make sure angle is stabilized
             if(angleOffset > (rotationDegrees - (vars.turnTolerance / 2)) && angleOffset < (rotationDegrees + (vars.turnTolerance / 2))) {
                 sensitivity += 1;
-                try {
-                    Thread.sleep(1);
-                } catch(Exception e) {
-                }
-                System.out.println(sensitivity);
                 if(sensitivity > vars.turnSensitivity) {
                     break;
                 }
             } else {
                 sensitivity = 0;
+            }
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         // Set motors to zero
@@ -121,7 +126,14 @@ public class CustomFunctions {
         double end = currentTime + (vars.throwSeconds * 1000);
         while (System.currentTimeMillis() < end) {
             setWithCorrections(power, power, power, power, power, power);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         setWithCorrections(0, 0, 0, 0, 0, 0);
+        // We shouldn't be throwing a cube when moving
+        vars.drive.arcadeDrive(0, 0);
     }
 }

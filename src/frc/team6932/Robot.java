@@ -40,17 +40,35 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         // One-Time Autonomous Program
         if(dash.autoCommand.getSelected() == 3) {
-            func.driveStraight(3.5);
+            func.driveStraight(4);
             if(func.getOwnership(0) == vars.RIGHT) {
-                func.turn(90);
-                func.driveStraight(-0.5);
+                func.turn(-75);
+                func.driveStraight(-1);
                 func.throwCube(false);
             }
         } else if(dash.autoCommand.getSelected() == 2) {
-            func.turn(90);
-            func.throwCube(false);
+            // Starting backwards
+            func.driveStraight(-0.5);
+            if(func.getOwnership(0) == vars.RIGHT) {
+                func.turn(-30);
+                func.driveStraight(-1.25);
+                func.turn(30);
+                func.driveStraight(-1);
+                func.throwCube(false);
+            } else if(func.getOwnership(0) == vars.LEFT) {
+                func.turn(30);
+                func.driveStraight(-1.25);
+                func.turn(-30);
+                func.driveStraight(-1);
+                func.throwCube(false);
+            }
         } else if(dash.autoCommand.getSelected() == 1) {
-            func.driveStraight(3.5);
+            func.driveStraight(4);
+            if(func.getOwnership(0) == vars.LEFT) {
+                func.turn(75);
+                func.driveStraight(-1);
+                func.throwCube(false);
+            }
         }
     }
 

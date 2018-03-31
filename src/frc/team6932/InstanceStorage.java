@@ -9,7 +9,6 @@ public class InstanceStorage {
     private static InstanceStorage instance = new InstanceStorage();
 
     // Sensors
-    Ultrasonic cubeDetector = new Ultrasonic(9, 8);
     Gyro gyro = new ADXRS450_Gyro();
 
     // Motor controllers
@@ -28,7 +27,6 @@ public class InstanceStorage {
     public Joystick controller = new Joystick(1);
 
     // Misc. Configuration
-    public double cubeThreshold = 12; // Threshold in inches for cube detection
     public double throwSeconds = 1;
 
     // Controller Configuration
@@ -46,7 +44,7 @@ public class InstanceStorage {
     public double driveSpeed = 0.75;
     public double turnSpeed = 0.75;
     public double turnTolerance = 4;
-    public double turnSensitivity = 100;
+    public double turnSensitivity = 4;
 
     // Global constants
     public final int RIGHT = 1;
