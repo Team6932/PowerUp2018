@@ -15,12 +15,18 @@ public class CustomFunctions {
 
     // Non-blocking functions
 
+    // Get cube status in robot
+    public boolean cubeInRobot() {
+        return true;
+        // TODO: Actually make do stuff
+    }
+
     // Send to grabber motors with corrections for derp motors
     public void setWithCorrections(double leftCimGrabber, double rightCimGrabber, double leftCimCube, double rightCimCube, double leftRedlineCube, double rightRedlineCube) {
         vars.leftCimGrabberMotor.set(0.65 * leftCimGrabber);
         vars.rightCimGrabberMotor.set(0.65 * rightCimGrabber);
-        vars.leftCimCubeMotor.set(0.65 * leftCimCube);
-        vars.rightCimCubeMotor.set((0.65 * rightCimCube) * 1.3); // Oddball motor
+        vars.leftCimCubeMotor.set(0.8 * leftCimCube);
+        vars.rightCimCubeMotor.set((0.8 * rightCimCube) * 1.3); // Oddball motor
         vars.leftRedlineCubeMotor.set(0.6 * leftRedlineCube);
         vars.rightRedlineCubeMotor.set((0.6 * rightRedlineCube) * 1.1); // Oddball motor/gearbox
     }

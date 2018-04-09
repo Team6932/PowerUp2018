@@ -51,15 +51,15 @@ public class Robot extends TimedRobot {
             func.driveStraight(-0.5);
             if(func.getOwnership(0) == vars.RIGHT) {
                 func.turn(-30);
-                func.driveStraight(-1.25);
+                func.driveStraight(-2.25);
                 func.turn(30);
-                func.driveStraight(-1);
+                func.driveStraight(-1.5);
                 func.throwCube(false);
             } else if(func.getOwnership(0) == vars.LEFT) {
                 func.turn(30);
-                func.driveStraight(-1.25);
+                func.driveStraight(-2.25);
                 func.turn(-30);
-                func.driveStraight(-1);
+                func.driveStraight(-1.5);
                 func.throwCube(false);
             }
         } else if(dash.autoCommand.getSelected() == 1) {
